@@ -35,7 +35,7 @@ $(document).keydown(function(event) {
 				var emoji = text.match(/:(\S*?):/)
 				if (emoji) {
 					emoji.code = emoji[1]
-					if (emoji_codes[emoji.code]) {
+					if (emoji_codes[emoji.code] && window.getSelection().anchorOffset == emoji.index+emoji.code.length+2) {
 						node.nodeValue = text.slice(0,emoji.index)+emoji_codes[emoji.code]+text.slice(emoji.index+emoji.code.length+2)
 						var range = document.createRange()
 						var selection = window.getSelection()
@@ -62,7 +62,7 @@ $(document).keyup(function(event) {
 			if (node) {
 				var text = node.nodeValue
 				var emoji = text.match(/:(\S*)/)
-				if (emoji) {
+				if (emoji && window.getSelection().anchorOffset == emoji.index+emoji[1].length+1) {
 					emoji.code = emoji[1]
 					if (previous == 9) {
 						if (possible.length > 0) {
