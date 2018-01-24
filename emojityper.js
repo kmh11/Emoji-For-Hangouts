@@ -25,10 +25,15 @@ function findProgressNode(element) {
 }
 
 $(document).keydown(function(event) {
+	var keycode = event.which
+	var valid = 
+		(keycode > 47 && keycode < 58) || (keycode == 32 || keycode == 13) ||
+		(keycode > 64 && keycode < 91) || (keycode > 95 && keycode < 112) ||
+		(keycode > 185 && keycode < 193) || (keycode > 218 && keycode < 223)
 	if ($(event.target).hasClass("editable")) {
 		if (event.which == 9) {
 			event.preventDefault()
-		} else {
+		} else if (valid) {
 			var node = findCompleteNode(event.target)
 			if (node) {
 				var text = node.nodeValue
