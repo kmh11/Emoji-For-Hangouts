@@ -26,7 +26,7 @@ function findProgressNode(element) {
 
 $(document).keydown(function(event) {
 	var keycode = event.which
-	var valid = 
+	var valid =
 		(keycode > 47 && keycode < 58) || (keycode == 32 || keycode == 13) ||
 		(keycode > 64 && keycode < 91) || (keycode > 95 && keycode < 112) ||
 		(keycode > 185 && keycode < 193) || (keycode > 218 && keycode < 223)
@@ -41,6 +41,7 @@ $(document).keydown(function(event) {
 				if (emoji) {
 					emoji.code = emoji[1]
 					if (emoji_codes[emoji.code] && window.getSelection().anchorOffset == emoji.index+emoji.code.length+2) {
+						frequencies[emoji.code] += 1
 						node.nodeValue = text.slice(0,emoji.index)+emoji_codes[emoji.code]+text.slice(emoji.index+emoji.code.length+2)
 						var range = document.createRange()
 						var selection = window.getSelection()
@@ -59,6 +60,10 @@ $(document).keydown(function(event) {
 var previous = -1
 var possible = []
 var index = 0
+var frequencies = {}
+for (code in emoji_codes) {
+	frequencies[code] = 0
+}
 
 $(document).keyup(function(event) {
 	if ($(event.target).hasClass("editable")) {
@@ -90,6 +95,13 @@ $(document).keyup(function(event) {
 								possible.push(emoji_code)
 							}
 						}
+						possible.sort((a, b) => {
+							if (frequencies[b] != frequencies[a]) {
+								return frequencies[b]-frequencies[a]
+							} else {
+								return a.localeCompare(b)
+							}
+						})
 						if (possible.length > 0) {
 							var code = possible[index]
 							index = (index+1)%possible.length
