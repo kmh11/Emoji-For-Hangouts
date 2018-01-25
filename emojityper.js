@@ -38,20 +38,18 @@ $(document).keydown(function(event) {
 				var emoji
 				while((emoji = regex.exec(text)) != null) {
 					regex.lastIndex = emoji.index+1
-					for (var e = 1; e < emoji.length; e++) {
-						emoji.code = emoji[e]
-						if (emoji_codes[emoji.code] && window.getSelection().anchorOffset == emoji.index+emoji.code.length+2) {
-							frequencies[emoji.code] += 1
-							chrome.storage.local.set({"frequencies": frequencies})
-							node.nodeValue = text.slice(0,emoji.index)+emoji_codes[emoji.code]+text.slice(emoji.index+emoji.code.length+2)
-							var range = document.createRange()
-							var selection = window.getSelection()
-							range.setStart(node, emoji.index+1)
-							range.collapse(true)
-							selection.removeAllRanges()
-							selection.addRange(range)
-							event.target.focus()
-						}
+					emoji.code = emoji[1]
+					if (emoji_codes[emoji.code] && window.getSelection().anchorOffset == emoji.index+emoji.code.length+2) {
+						frequencies[emoji.code] += 1
+						chrome.storage.local.set({"frequencies": frequencies})
+						node.nodeValue = text.slice(0,emoji.index)+emoji_codes[emoji.code]+text.slice(emoji.index+emoji.code.length+2)
+						var range = document.createRange()
+						var selection = window.getSelection()
+						range.setStart(node, emoji.index+1)
+						range.collapse(true)
+						selection.removeAllRanges()
+						selection.addRange(range)
+						event.target.focus()
 					}
 				}
 			}
@@ -83,49 +81,49 @@ $(document).keyup(function(event) {
 				var emoji
 				while((emoji = regex.exec(text)) != null) {
 					regex.lastIndex = emoji.index+1
-					for (var e = 1; e < emoji.length; e++) {
-						if (window.getSelection().anchorOffset == emoji.index+emoji[e].length+1) {
-							emoji.code = emoji[e]
-							if (previous == 9) {
-								if (possible.length > 0) {
-									var code = possible[index]
-									index = (index+1)%possible.length
-									node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
-									var range = document.createRange()
-									var selection = window.getSelection()
-									range.setStart(node, emoji.index+code.length+2)
-									range.collapse(true)
-									selection.removeAllRanges()
-									selection.addRange(range)
-									event.target.focus()
+					if (window.getSelection().anchorOffset == emoji.index+emoji[1].length+1) {
+						emoji.code = emoji[1]
+						if (previous == 9) {
+							if (possible.length > 0) {
+								var code = possible[index]
+								index = (index+1)%possible.length
+								console.log(emoji)
+								node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
+								var range = document.createRange()
+								var selection = window.getSelection()
+								range.setStart(node, emoji.index+code.length+2)
+								range.collapse(true)
+								selection.removeAllRanges()
+								selection.addRange(range)
+								event.target.focus()
+								break
+							}
+						} else {
+							possible = []
+							index = 0
+							for (emoji_code in emoji_codes) {
+								if (emoji_code.indexOf(emoji.code) == 0) {
+									possible.push(emoji_code)
 								}
-							} else {
-								possible = []
-								index = 0
-								for (emoji_code in emoji_codes) {
-									if (emoji_code.indexOf(emoji.code) == 0) {
-										possible.push(emoji_code)
-									}
+							}
+							possible.sort((a, b) => {
+								if (frequencies[b] != frequencies[a]) {
+									return frequencies[b]-frequencies[a]
+								} else {
+									return a.localeCompare(b)
 								}
-								possible.sort((a, b) => {
-									if (frequencies[b] != frequencies[a]) {
-										return frequencies[b]-frequencies[a]
-									} else {
-										return a.localeCompare(b)
-									}
-								})
-								if (possible.length > 0) {
-									var code = possible[index]
-									index = (index+1)%possible.length
-									node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
-									var range = document.createRange()
-									var selection = window.getSelection()
-									range.setStart(node, emoji.index+code.length+2)
-									range.collapse(true)
-									selection.removeAllRanges()
-									selection.addRange(range)
-									event.target.focus()
-								}
+							})
+							if (possible.length > 0) {
+								var code = possible[index]
+								index = (index+1)%possible.length
+								node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
+								var range = document.createRange()
+								var selection = window.getSelection()
+								range.setStart(node, emoji.index+code.length+2)
+								range.collapse(true)
+								selection.removeAllRanges()
+								selection.addRange(range)
+								event.target.focus()
 							}
 						}
 					}
