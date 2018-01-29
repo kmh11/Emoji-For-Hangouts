@@ -70,7 +70,7 @@ chrome.storage.local.get("frequencies", function(items) {
 	}
 })
 
-$(document).keyup(function(event) {
+$(document).keydown(function(event) {
 	if ($(event.target).hasClass("editable")) {
 		if (event.which == 9) {
 			var nodes = findProgressNodes(event.target)
