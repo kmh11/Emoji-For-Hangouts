@@ -41,7 +41,7 @@ $(document).keydown(function(event) {
 					emoji.code = emoji[1]
 					if (emoji_codes[emoji.code] && window.getSelection().anchorOffset == emoji.index+emoji.code.length+2) {
 						frequencies[emoji.code] += 1
-						chrome.storage.local.set({"frequencies": frequencies})
+						chrome.storage.local.set({"frequencies": frequencies}, function(){})
 						node.nodeValue = text.slice(0,emoji.index)+emoji_codes[emoji.code]+text.slice(emoji.index+emoji.code.length+2)
 						var range = document.createRange()
 						var selection = window.getSelection()

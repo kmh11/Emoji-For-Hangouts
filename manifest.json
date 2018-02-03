@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Emoji For Hangouts",
   "description": "A simple extension to type emoji in Google Hangouts with emoji codes.",
-  "version": "1.0",
+  "version": "0.0.1",
 	"content_scripts": [{
 		"matches": ["*://hangouts.google.com/*"],
 		"js": ["jquery.min.js", "emoji_codes.js", "emojityper.js"],
@@ -11,5 +11,17 @@
   "permissions": [
     "activeTab",
     "storage"
-  ]
+  ],
+  "browser_action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
 }
