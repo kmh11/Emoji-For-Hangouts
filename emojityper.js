@@ -70,7 +70,7 @@ chrome.storage.local.get("frequencies", function(items) {
 	}
 })
 
-$(document).keyup(function(event) {
+$(document).keydown(function(event) {
 	if ($(event.target).hasClass("editable")) {
 		if (event.which == 9) {
 			var nodes = findProgressNodes(event.target)
@@ -87,7 +87,6 @@ $(document).keyup(function(event) {
 							if (possible.length > 0) {
 								var code = possible[index]
 								index = (index+1)%possible.length
-								console.log(emoji)
 								node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
 								var range = document.createRange()
 								var selection = window.getSelection()
