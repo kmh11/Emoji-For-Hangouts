@@ -1,6 +1,6 @@
 function findCompleteNodes(element, current) {
 	if (!current) { current = [] }
-	if (element.nodeValue && element.nodeValue.match(/:(\S*?):/)) {
+	if (element.nodeValue && element.nodeValue.match(/:([^\s:]*?):/)) {
 		current.push(element)
 	}
 	for (var c = 0; c < element.childNodes.length; c++) {
@@ -11,7 +11,7 @@ function findCompleteNodes(element, current) {
 
 function findProgressNodes(element, current) {
 	if (!current) { current = [] }
-	if (element.nodeValue && element.nodeValue.match(/:(\S*)/)) {
+	if (element.nodeValue && element.nodeValue.match(/:([^\s:]*)/)) {
 		current.push(element)
 	}
 	for (var c = 0; c < element.childNodes.length; c++) {
@@ -34,7 +34,7 @@ $(document).keydown(function(event) {
 			for (var n = 0; n < nodes.length; n++) {
 				var node = nodes[n]
 				var text = node.nodeValue
-				var regex = /:(\S*?):/g
+				var regex = /:([^\s:]*?):/g
 				var emoji
 				while((emoji = regex.exec(text)) != null) {
 					regex.lastIndex = emoji.index+1
@@ -77,17 +77,17 @@ $(document).keydown(function(event) {
 			for (var n = 0; n < nodes.length; n++) {
 				var node = nodes[n]
 				var text = node.nodeValue
-				var regex = /:(\S*)/g
+				var regex = /:([^\s:]*)/g
 				var emoji
 				while((emoji = regex.exec(text)) != null) {
 					regex.lastIndex = emoji.index+1
-					if (window.getSelection().anchorOffset == emoji.index+emoji[1].length+1) {
+					if (window.getSelection().anchorOffset == emoji.index+emoji[1].length+1 || window.getSelection().anchorOffset-1 == emoji.index+emoji[1].length+1 && text[window.getSelection().anchorOffset-1] == ":") {
 						emoji.code = emoji[1]
 						if (previous == 9) {
 							if (possible.length > 0) {
 								var code = possible[index]
 								index = (index+1)%possible.length
-								node.nodeValue = text.slice(0,emoji.index)+":"+code+":"+text.slice(emoji.index+emoji.code.length+1)
+								node.nodeValue = text.slice(0,emoji.index)+":"+code+("" ? text[window.getSelection().anchorOffset-1] == ":" : "")+text.slice(emoji.index+emoji.code.length+1)
 								var range = document.createRange()
 								var selection = window.getSelection()
 								range.setStart(node, emoji.index+code.length+2)
